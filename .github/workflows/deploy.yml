@@ -69,7 +69,6 @@ jobs:
               -e PORT=2001 \
               -e USERSMTP="${{ secrets.USERSMTP }}" \
               -e USERHOST="${{ secrets.USERHOST }}" \
-
               -e NODE_ENV="production" \
               -e PORT=2001 \
               --restart unless-stopped \
