@@ -59,10 +59,10 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:latest
 
             # Stop and remove old container if it exists
-            docker stop alpha-server || true && docker rm alpha-server || true
+            docker stop connect-server || true && docker rm connect-server || true
 
             # Run new container with environment variables
-            docker run -d --name alpha-server \
+            docker run -d --name connect-server \
               -p 2001:2001 \
               -e MONGODB_URI="${{ secrets.MONGDB_URI }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
