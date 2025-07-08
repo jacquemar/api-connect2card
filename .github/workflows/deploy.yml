@@ -57,12 +57,12 @@ jobs:
 
             # Pull backend image
             docker pull ghcr.io/${{ github.repository }}:latest
-
+            
             # Stop and remove old container if it exists
-            docker stop connect-server || true && docker rm connect-server || true
+            docker stop api-connect2card || true && docker rm api-connect2card || true
 
             # Run new container with environment variables
-            docker run -d --name connect-server \
+            docker run -d --name api-connect2card \
               -p 2001:2001 \
               -e MONGODB_URI="${{ secrets.MONGDB_URI }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
