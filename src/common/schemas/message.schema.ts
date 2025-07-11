@@ -14,9 +14,9 @@ export class Message {
   @Prop({
     type: {
       nom: { type: String, required: true, trim: true },
-      contact: { type: String, required: true, trim: true }
+      contact: { type: String, required: true, trim: true },
     },
-    required: true
+    required: true,
   })
   expediteur: {
     nom: string;
@@ -26,12 +26,12 @@ export class Message {
   @Prop({ required: true, trim: true })
   message: string;
 
-  @Prop({ 
-    type: String, 
-    enum: ['non_lu', 'lu', 'archive'], 
-    default: 'non_lu' 
+  @Prop({
+    type: String,
+    enum: ['non_lu', 'lu', 'archive'],
+    default: 'non_lu',
   })
   statut: string;
 }
 
-export const MessageSchema = SchemaFactory.createForClass(Message); 
+export const MessageSchema = SchemaFactory.createForClass(Message);

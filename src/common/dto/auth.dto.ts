@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
   @ApiProperty({
-    description: 'Nom d\'utilisateur',
-    example: 'johndoe'
+    description: "Nom d'utilisateur",
+    example: 'johndoe',
   })
   @IsNotEmpty()
   @IsString()
@@ -13,7 +13,7 @@ export class LoginDto {
   @ApiProperty({
     description: 'Mot de passe (minimum 6 caractères)',
     example: 'motdepasse123',
-    minLength: 6
+    minLength: 6,
   })
   @IsNotEmpty()
   @IsString()
@@ -23,8 +23,8 @@ export class LoginDto {
 
 export class ForgotPasswordDto {
   @ApiProperty({
-    description: 'Adresse email de l\'utilisateur',
-    example: 'user@example.com'
+    description: "Adresse email de l'utilisateur",
+    example: 'user@example.com',
   })
   @IsEmail()
   @IsNotEmpty()
@@ -34,7 +34,7 @@ export class ForgotPasswordDto {
 export class ResetPasswordDto {
   @ApiProperty({
     description: 'Token de réinitialisation reçu par email',
-    example: 'abc123def456'
+    example: 'abc123def456',
   })
   @IsNotEmpty()
   @IsString()
@@ -43,10 +43,10 @@ export class ResetPasswordDto {
   @ApiProperty({
     description: 'Nouveau mot de passe (minimum 6 caractères)',
     example: 'nouveaumotdepasse123',
-    minLength: 6
+    minLength: 6,
   })
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
   newPassword: string;
-} 
+}

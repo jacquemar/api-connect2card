@@ -1,8 +1,17 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto, UpdateUserProfileDto, CheckEmailDto, CheckUsernameDto } from '../../common/dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserProfileDto,
+  CheckEmailDto,
+  CheckUsernameDto,
+} from '../../common/dto/user.dto';
 import { User, UserDocument } from '../../common/schemas/user.schema';
 import { Demande, DemandeDocument } from '../../common/schemas/demande.schema';
 import * as bcrypt from 'bcryptjs';
@@ -27,12 +36,15 @@ export class UsersService {
       const user = await this.userModel.findOne({ userName: userName });
 
       if (!user) {
-        throw new NotFoundException("Utilisateur non trouvé.");
+        throw new NotFoundException('Utilisateur non trouvé.');
       }
 
       return user;
     } catch (error) {
-      console.error('Erreur lors de la récupération des informations utilisateur :', error);
+      console.error(
+        'Erreur lors de la récupération des informations utilisateur :',
+        error,
+      );
       throw error;
     }
   }
@@ -42,12 +54,15 @@ export class UsersService {
       const user = await this.userModel.findOne({ userName: userName });
 
       if (!user) {
-        throw new NotFoundException("Utilisateur non trouvé.");
+        throw new NotFoundException('Utilisateur non trouvé.');
       }
 
       return user;
     } catch (error) {
-      console.error('Erreur lors de la récupération des informations utilisateur:', error);
+      console.error(
+        'Erreur lors de la récupération des informations utilisateur:',
+        error,
+      );
       throw error;
     }
   }
@@ -65,12 +80,12 @@ export class UsersService {
     try {
       const existingUser = await this.userModel.findOne({ email });
       const existingDemande = await this.demandeModel.findOne({ email });
-      
+
       const exists = existingUser || existingDemande;
-      
+
       return { exists: !!exists };
     } catch (error) {
-      console.error('Erreur lors de la vérification de l\'email:', error);
+      console.error("Erreur lors de la vérification de l'email:", error);
       throw error;
     }
   }
@@ -79,12 +94,15 @@ export class UsersService {
     try {
       const existingUser = await this.userModel.findOne({ userName });
       const existingDemande = await this.demandeModel.findOne({ userName });
-      
+
       const exists = existingUser || existingDemande;
-      
+
       return { exists: !!exists };
     } catch (error) {
-      console.error('Erreur lors de la vérification du nom d\'utilisateur:', error);
+      console.error(
+        "Erreur lors de la vérification du nom d'utilisateur:",
+        error,
+      );
       throw error;
     }
   }
@@ -92,7 +110,9 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
     try {
       // Vérifier si l'utilisateur existe déjà
-      const existingUser = await this.checkUsernameExists(createUserDto.userName);
+      const existingUser = await this.checkUsernameExists(
+        createUserDto.userName,
+      );
       if (existingUser.exists) {
         throw new BadRequestException('Cet utilisateur est déjà utilisé.');
       }
@@ -104,8 +124,10 @@ export class UsersService {
       const newUser = new this.userModel({
         ...createUserDto,
         password: hashedPassword,
-        photoProfilURL: 'https://via.placeholder.com/150/000000/FFFFFF/?text=Profile',
-        banniereURL: 'https://via.placeholder.com/800x200/000000/FFFFFF/?text=Banner'
+        photoProfilURL:
+          'https://via.placeholder.com/150/000000/FFFFFF/?text=Profile',
+        banniereURL:
+          'https://via.placeholder.com/800x200/000000/FFFFFF/?text=Banner',
       });
 
       // Sauvegarder le nouvel utilisateur
@@ -113,16 +135,22 @@ export class UsersService {
 
       return newUser;
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de l\'utilisateur :', error);
+      console.error(
+        "Erreur lors de l'enregistrement de l'utilisateur :",
+        error,
+      );
       throw error;
     }
   }
 
-  async updateUserProfile(userName: string, updateUserProfileDto: UpdateUserProfileDto): Promise<{ message: string; remainingCredits: number }> {
+  async updateUserProfile(
+    userName: string,
+    updateUserProfileDto: UpdateUserProfileDto,
+  ): Promise<{ message: string; remainingCredits: number }> {
     try {
       // Récupérer l'utilisateur à mettre à jour
       const user = await this.userModel.findOne({ userName });
-      
+
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -133,17 +161,17 @@ export class UsersService {
 
       // Mettre à jour les champs fournis et décrémenter le crédit
       Object.assign(user, updateUserProfileDto);
-      
+
       if (user.credit > 0) {
         user.credit -= 1;
       }
-      
+
       // Sauvegarder les modifications
       await user.save();
 
-      return { 
-        message: 'Profil utilisateur mis à jour avec succès', 
-        remainingCredits: user.credit || 0 
+      return {
+        message: 'Profil utilisateur mis à jour avec succès',
+        remainingCredits: user.credit || 0,
       };
     } catch (error) {
       console.error(error);
@@ -151,11 +179,13 @@ export class UsersService {
     }
   }
 
-  async toggleUserStatus(userName: string): Promise<{ message: string; isActive: boolean }> {
+  async toggleUserStatus(
+    userName: string,
+  ): Promise<{ message: string; isActive: boolean }> {
     try {
       // Trouver et basculer le statut de l'utilisateur
       const user = await this.userModel.findOne({ userName });
-      
+
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -166,7 +196,7 @@ export class UsersService {
 
       return {
         message: `Profil ${user.isActive ? 'activé' : 'désactivé'} avec succès`,
-        isActive: user.isActive
+        isActive: user.isActive,
       };
     } catch (error) {
       console.error('Erreur lors du basculement du statut du profil:', error);
@@ -174,11 +204,13 @@ export class UsersService {
     }
   }
 
-  async toggleUserSuspension(userName: string): Promise<{ message: string; isSuspended: boolean; isActive: boolean }> {
+  async toggleUserSuspension(
+    userName: string,
+  ): Promise<{ message: string; isSuspended: boolean; isActive: boolean }> {
     try {
       // Trouver et basculer la suspension de l'utilisateur
       const user = await this.userModel.findOne({ userName });
-      
+
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -193,10 +225,13 @@ export class UsersService {
       return {
         message: `Compte ${user.isSuspended ? 'suspendu' : 'réactivé'} avec succès`,
         isSuspended: user.isSuspended,
-        isActive: user.isActive
+        isActive: user.isActive,
       };
     } catch (error) {
-      console.error('Erreur lors de la modification de l\'état de suspension:', error);
+      console.error(
+        "Erreur lors de la modification de l'état de suspension:",
+        error,
+      );
       throw error;
     }
   }
@@ -212,7 +247,7 @@ export class UsersService {
 
       return { message: 'Utilisateur supprimé avec succès' };
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'utilisateur :', error);
+      console.error("Erreur lors de la suppression de l'utilisateur :", error);
       throw error;
     }
   }
@@ -223,16 +258,61 @@ export class UsersService {
       const user = await this.userModel.findOne({ userName });
 
       if (!user) {
-        throw new NotFoundException("Utilisateur non trouvé.");
+        throw new NotFoundException('Utilisateur non trouvé.');
       }
 
       // Incrémenter le compteur
       user.vcardDownloadsCount = (user.vcardDownloadsCount || 0) + 1;
       await user.save();
 
-      return { message: "Le compteur de téléchargements a été incrémenté avec succès." };
+      return {
+        message: 'Le compteur de téléchargements a été incrémenté avec succès.',
+      };
     } catch (error) {
-      console.error('Erreur lors de l\'incrémentation du compteur de téléchargements :', error);
+      console.error(
+        "Erreur lors de l'incrémentation du compteur de téléchargements :",
+        error,
+      );
+      throw error;
+    }
+  }
+
+  async generateVcard(userName: string): Promise<string> {
+    try {
+      // Recherche de l'utilisateur
+      const user = await this.userModel.findOne({ userName });
+
+      if (!user) {
+        throw new NotFoundException('Utilisateur non trouvé.');
+      }
+
+      // Génération du contenu vCard
+      const vCardContent = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        `FN:${user.nomComplet || user.userName}`,
+        `N:${user.nomComplet ? user.nomComplet.split(' ').slice(-1)[0] : ''};${user.nomComplet ? user.nomComplet.split(' ').slice(0, -1).join(' ') : user.userName};;;`,
+        user.titre ? `TITLE:${user.titre}` : '',
+        user.phoneNumber ? `TEL:${user.phoneNumber}` : '',
+        user.email ? `EMAIL:${user.email}` : '',
+        user.web ? `URL:${user.web}` : '',
+        user.address ? `ADR:;;${user.address};;;;` : '',
+        user.facebook ? `X-SOCIALPROFILE;TYPE=facebook:${user.facebook}` : '',
+        user.instagram ? `X-SOCIALPROFILE;TYPE=instagram:${user.instagram}` : '',
+        user.linkedin ? `X-SOCIALPROFILE;TYPE=linkedin:${user.linkedin}` : '',
+        user.twitter ? `X-SOCIALPROFILE;TYPE=twitter:${user.twitter}` : '',
+        user.whatsapp ? `X-SOCIALPROFILE;TYPE=whatsapp:${user.whatsapp}` : '',
+        user.photoProfilURL ? `PHOTO:${user.photoProfilURL}` : '',
+        `NOTE:Carte de visite numérique Connect2Card - ${user.userName}`,
+        'END:VCARD'
+      ].filter(line => line.trim() !== '').join('\r\n');
+
+      return vCardContent;
+    } catch (error) {
+      console.error(
+        "Erreur lors de la génération de la vCard :",
+        error,
+      );
       throw error;
     }
   }
@@ -242,7 +322,7 @@ export class UsersService {
       // Logique d'incrémentation des visites avec historique
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const user = await this.userModel.findOne({ userName });
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
@@ -250,28 +330,28 @@ export class UsersService {
 
       // Incrémenter le compteur de visites
       user.visitscount = (user.visitscount || 0) + 1;
-      
+
       // Ajouter à l'historique des visites
       if (!user.visitsHistory) {
         user.visitsHistory = [];
       }
-      
+
       // Vérifier si on a déjà une entrée pour aujourd'hui
-      const todayEntry = user.visitsHistory.find(entry => 
-        entry.date.toDateString() === today.toDateString()
+      const todayEntry = user.visitsHistory.find(
+        (entry) => entry.date.toDateString() === today.toDateString(),
       );
-      
+
       if (todayEntry) {
         todayEntry.count += 1;
       } else {
         user.visitsHistory.push({ date: today, count: 1 });
       }
-      
+
       await user.save();
 
       return { message: 'Visite enregistrée avec succès' };
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de la visite:', error);
+      console.error("Erreur lors de l'enregistrement de la visite:", error);
       throw error;
     }
   }
@@ -307,11 +387,14 @@ export class UsersService {
       }
 
       return user.visitsHistory
-        .filter(entry => entry.date >= startDate)
+        .filter((entry) => entry.date >= startDate)
         .sort((a, b) => a.date.getTime() - b.date.getTime());
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'historique des visites:', error);
+      console.error(
+        "Erreur lors de la récupération de l'historique des visites:",
+        error,
+      );
       throw error;
     }
   }
-} 
+}

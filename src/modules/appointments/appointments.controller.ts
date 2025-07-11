@@ -1,5 +1,19 @@
-import { Controller, Get, Post, Delete, Body, Param, Headers, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Headers,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AppointmentsService } from './appointments.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
@@ -11,7 +25,10 @@ export class AppointmentsController {
   @Post('appointments')
   @ApiOperation({ summary: 'Créer un rendez-vous' })
   @ApiResponse({ status: 201, description: 'Rendez-vous créé avec succès' })
-  @ApiResponse({ status: 404, description: 'Utilisateur propriétaire non trouvé' })
+  @ApiResponse({
+    status: 404,
+    description: 'Utilisateur propriétaire non trouvé',
+  })
   async createAppointment(@Body() createAppointmentDto: any) {
     return this.appointmentsService.createAppointment(createAppointmentDto);
   }
@@ -34,8 +51,11 @@ export class AppointmentsController {
   @ApiResponse({ status: 200, description: 'Rendez-vous supprimé' })
   @ApiResponse({ status: 401, description: 'Non autorisé' })
   @ApiResponse({ status: 404, description: 'Rendez-vous non trouvé' })
-  async deleteAppointment(@Param('id') id: string, @Headers('authorization') authHeader: string) {
+  async deleteAppointment(
+    @Param('id') id: string,
+    @Headers('authorization') authHeader: string,
+  ) {
     const token = authHeader?.split(' ')[1];
     return this.appointmentsService.deleteAppointment(id, token);
   }
-} 
+}

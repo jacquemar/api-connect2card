@@ -6,4 +6,4 @@ export class CreateAppointmentDto {
   date: string;
   time: string;
   message?: string;
-} 
+}

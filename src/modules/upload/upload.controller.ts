@@ -1,4 +1,9 @@
-import { Controller, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 
@@ -17,4 +22,4 @@ export class UploadController {
   async uploadPhotoProfil(@UploadedFile() file: any) {
     return this.uploadService.uploadPhotoProfil(file);
   }
-} 
+}

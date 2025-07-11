@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   // Configuration CORS
   app.enableCors({
     origin: true,
@@ -14,11 +14,13 @@ async function bootstrap() {
   });
 
   // Validation globale des DTOs
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   // Préfixe global pour l'API
   app.setGlobalPrefix('api');
@@ -26,7 +28,9 @@ async function bootstrap() {
   // Configuration Swagger
   const config = new DocumentBuilder()
     .setTitle('Connect2Card API')
-    .setDescription('API pour la plateforme Connect2Card - Cartes de visite numériques')
+    .setDescription(
+      'API pour la plateforme Connect2Card - Cartes de visite numériques',
+    )
     .setVersion('1.0')
     .addTag('Auth', 'Authentification et gestion des sessions')
     .addTag('Users', 'Gestion des utilisateurs')
@@ -60,7 +64,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 2001;
   await app.listen(port);
-  
+
   console.log(`🚀 Backend Connect2Card démarré sur le port ${port}`);
   console.log(`📖 API disponible sur: http://localhost:${port}/api`);
   console.log(`📚 Documentation Swagger: http://localhost:${port}/api/docs`);

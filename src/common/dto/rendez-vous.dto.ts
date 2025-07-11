@@ -11,4 +11,4 @@ export class CreateRendezVousDto {
 
 export class UpdateRendezVousStatusDto {
   statut: 'en_attente' | 'confirme' | 'annule' | 'termine';
-} 
+}

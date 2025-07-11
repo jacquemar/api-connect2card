@@ -1,70 +1,71 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from '../../common/schemas/user.schema';
+import { Message, MessageDocument } from '../../common/schemas/message.schema';
 
 @Injectable()
 export class MessagesService {
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
+  ) {}
+
   async createMessage(createMessageDto: any): Promise<any> {
     try {
       const { destinataireUserName, expediteur, message } = createMessageDto;
 
-      // TODO: Vérifier que l'utilisateur destinataire existe
-      // const utilisateur = await User.findOne({ userName: destinataireUserName });
-      
-      // Simulation pour l'exemple
-      const utilisateur = null;
-      
+      // Vérifier que l'utilisateur destinataire existe
+      const utilisateur = await this.userModel.findOne({ userName: destinataireUserName });
+
       if (!utilisateur) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
 
-      // TODO: Créer le message
-      const nouveauMessage = {
-        destinataire: 'utilisateur._id',
+      // Créer le message
+      const nouveauMessage = new this.messageModel({
+        destinataire: utilisateur._id,
         destinataireUserName: destinataireUserName,
         expediteur: {
           nom: expediteur.nom,
-          contact: expediteur.contact
+          contact: expediteur.contact,
         },
-        message: message
-      };
+        message: message,
+      });
 
-      // TODO: Sauvegarder le message
-      // await nouveauMessage.save();
+      // Sauvegarder le message
+      await nouveauMessage.save();
 
-      return { 
+      return {
         message: 'Message envoyé avec succès',
-        messageData: nouveauMessage
+        messageData: nouveauMessage,
       };
-
     } catch (error) {
-      console.error('Erreur lors de l\'envoi du message:', error);
+      console.error("Erreur lors de l'envoi du message:", error);
       throw error;
     }
   }
 
   async getMessagesByUser(userName: string, statut?: string): Promise<any[]> {
     try {
-      // TODO: Vérifier que l'utilisateur existe
-      // const utilisateur = await User.findOne({ userName });
-      
-      // Simulation pour l'exemple
-      const utilisateur = null;
-      
+      // Vérifier que l'utilisateur existe
+      const utilisateur = await this.userModel.findOne({ userName });
+
       if (!utilisateur) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
 
-      // TODO: Construire la requête et récupérer les messages
-      // let query = { destinataire: utilisateur._id };
-      // if (statut) {
-      //   query.statut = statut;
-      // }
+      // Construire la requête et récupérer les messages
+      let query: any = { destinataire: utilisateur._id };
+      if (statut) {
+        query.statut = statut;
+      }
 
-      // const messages = await Messages.find(query)
-      //   .sort({ createdAt: -1 })
-      //   .populate('destinataire', 'nomComplet userName');
+      const messages = await this.messageModel.find(query)
+        .sort({ createdAt: -1 })
+        .populate('destinataire', 'nomComplet userName');
 
-      return [];
-
+      return messages;
     } catch (error) {
       console.error('Erreur lors de la récupération des messages:', error);
       throw error;
@@ -73,25 +74,24 @@ export class MessagesService {
 
   async updateMessageStatus(id: string, statut: string): Promise<any> {
     try {
-      // TODO: Mettre à jour le statut du message
-      // const message = await Messages.findByIdAndUpdate(
-      //   id,
-      //   { statut: statut },
-      //   { new: true }
-      // );
+      // Mettre à jour le statut du message
+      const message = await this.messageModel.findByIdAndUpdate(
+        id,
+        { statut: statut },
+        { new: true }
+      );
 
-      // if (!message) {
-      //   throw new NotFoundException('Message non trouvé');
-      // }
+      if (!message) {
+        throw new NotFoundException('Message non trouvé');
+      }
 
       return {
         message: 'Statut du message mis à jour avec succès',
-        // messageData: message
+        messageData: message
       };
-
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut:', error);
       throw error;
     }
   }
-} 
+}

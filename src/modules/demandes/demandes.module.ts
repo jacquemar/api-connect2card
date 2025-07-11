@@ -16,4 +16,4 @@ import { User, UserSchema } from '../../common/schemas/user.schema';
   providers: [DemandesService],
   exports: [DemandesService],
 })
-export class DemandesModule {} 
+export class DemandesModule {}

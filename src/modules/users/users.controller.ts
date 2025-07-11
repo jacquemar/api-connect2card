@@ -1,9 +1,24 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, Req, Headers, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { Request } from 'express';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Query,
+  Headers,
+  UseGuards,
+  Res,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { Response } from 'express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Users')
 @Controller()
@@ -13,16 +28,19 @@ export class UsersController {
   @Get('user')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Récupérer l\'utilisateur connecté' })
+  @ApiOperation({ summary: "Récupérer l'utilisateur connecté" })
   @ApiResponse({ status: 200, description: 'Utilisateur récupéré avec succès' })
-  @ApiResponse({ status: 401, description: 'Non autorisé - Token manquant ou invalide' })
+  @ApiResponse({
+    status: 401,
+    description: 'Non autorisé - Token manquant ou invalide',
+  })
   async getCurrentUser(@Headers('authorization') authHeader: string) {
     const token = authHeader?.split(' ')[1];
     return this.usersService.getCurrentUser(token);
   }
 
   @Get('users/:userName')
-  @ApiOperation({ summary: 'Récupérer un utilisateur par nom d\'utilisateur' })
+  @ApiOperation({ summary: "Récupérer un utilisateur par nom d'utilisateur" })
   @ApiResponse({ status: 200, description: 'Utilisateur trouvé' })
   @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
   async getUserByUserName(@Param('userName') userName: string) {
@@ -40,17 +58,51 @@ export class UsersController {
   }
 
   @Get('check-email')
-  @ApiOperation({ summary: 'Vérifier la disponibilité d\'un email' })
-  @ApiResponse({ status: 200, description: 'Statut de disponibilité de l\'email' })
+  @ApiOperation({ summary: "Vérifier la disponibilité d'un email" })
+  @ApiResponse({
+    status: 200,
+    description: "Statut de disponibilité de l'email",
+  })
   async checkEmail(@Query('email') email: string) {
     return this.usersService.checkEmailExists(email);
   }
 
   @Get('check-username')
-  @ApiOperation({ summary: 'Vérifier la disponibilité d\'un nom d\'utilisateur' })
-  @ApiResponse({ status: 200, description: 'Statut de disponibilité du nom d\'utilisateur' })
+  @ApiOperation({ summary: "Vérifier la disponibilité d'un nom d'utilisateur" })
+  @ApiResponse({
+    status: 200,
+    description: "Statut de disponibilité du nom d'utilisateur",
+  })
   async checkUsername(@Query('userName') userName: string) {
     return this.usersService.checkUsernameExists(userName);
+  }
+
+  @Get('users/:userName/vcard')
+  @ApiOperation({ summary: 'Télécharger la vCard de l\'utilisateur' })
+  @ApiResponse({ status: 200, description: 'vCard téléchargée avec succès' })
+  @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
+  async downloadVcard(
+    @Param('userName') userName: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const vCardContent = await this.usersService.generateVcard(userName);
+      
+      // Incrémenter le compteur de téléchargements
+      await this.usersService.incrementVcardDownload(userName);
+      
+      // Configurer les en-têtes pour le téléchargement
+      res.setHeader('Content-Type', 'text/vcard');
+      res.setHeader('Content-Disposition', `attachment; filename="${userName}.vcf"`);
+      res.setHeader('Content-Length', Buffer.byteLength(vCardContent, 'utf8'));
+      
+      return res.send(vCardContent);
+    } catch (error) {
+      return res.status(404).json({ 
+        message: 'Utilisateur non trouvé', 
+        error: error.message 
+      });
+    }
   }
 
   @Post('users/:userName/increment-download')
@@ -70,10 +122,13 @@ export class UsersController {
   @Get('users/:userName/visits-history')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Récupérer l\'historique des visites' })
+  @ApiOperation({ summary: "Récupérer l'historique des visites" })
   @ApiResponse({ status: 200, description: 'Historique récupéré' })
   @ApiResponse({ status: 401, description: 'Non autorisé' })
-  async getVisitsHistory(@Param('userName') userName: string, @Query('period') period: string) {
+  async getVisitsHistory(
+    @Param('userName') userName: string,
+    @Query('period') period: string,
+  ) {
     return this.usersService.getVisitsHistory(userName, period);
   }
 
@@ -87,4 +142,4 @@ export class UsersController {
   async deleteUser(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }
-} 
+}

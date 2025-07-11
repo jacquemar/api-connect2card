@@ -8,10 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { DemandesModule } from './modules/demandes/demandes.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
-// Modules temporairement désactivés - à créer si nécessaire
-// import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
-// import { MessagesModule } from './modules/messages/messages.module';
-// import { UploadModule } from './modules/upload/upload.module';
+import { MessagesModule } from './modules/messages/messages.module';
+import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
 
 @Module({
   imports: [
@@ -21,28 +19,38 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI') || 'mongodb+srv://jacquemar:o85pxev28Rl0qapG@ConnectDb.mht5fkp.mongodb.net/ConnectDb?retryWrites=true&writeConcern=majority',
+        uri: configService.get<string>('MONGODB_URI') || 'mongodb://localhost:27017/ConnectDb',
       }),
       inject: [ConfigService],
     }),
     JwtModule.registerAsync({
       global: true,
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'secret secours',
-        signOptions: { 
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d' 
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET');
+        if (!secret) {
+          throw new Error('JWT_SECRET doit être défini dans les variables d\'environnement');
+        }
+        return {
+          secret,
+          signOptions: {
+            expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+            algorithm: 'HS256',
+            issuer: 'connect2card-api',
+            audience: 'connect2card-client',
+            // Ajout d'un jitter aléatoire pour éviter les collisions de tokens
+            jwtid: Math.random().toString(36).substring(7)
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,
     DemandesModule,
     AppointmentsModule,
-    // RendezVousModule,
-    // MessagesModule, 
-    // UploadModule,
+    MessagesModule,
+    RendezVousModule,
   ],
   controllers: [AppController],
   providers: [AppService],

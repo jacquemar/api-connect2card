@@ -9,4 +9,4 @@ export class CreateMessageDto {
 
 export class UpdateMessageStatusDto {
   statut: 'non_lu' | 'lu' | 'archive';
-} 
+}

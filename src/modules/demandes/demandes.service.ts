@@ -30,12 +30,17 @@ export class DemandesService {
   async createDemande(createDemandeDto: any): Promise<any> {
     try {
       // Rechercher si l'utilisateur existe déjà
-      const existingUser = await this.userModel.findOne({ userName: createDemandeDto.userName });
+      const existingUser = await this.userModel.findOne({
+        userName: createDemandeDto.userName,
+      });
       if (existingUser) {
         throw new Error('Cet utilisateur est déjà utilisé.');
       }
-      
-      const hashedPassword = await bcrypt.hash(createDemandeDto.password, this.saltRounds);
+
+      const hashedPassword = await bcrypt.hash(
+        createDemandeDto.password,
+        this.saltRounds,
+      );
 
       // Créer une nouvelle demande
       const newDemande = new this.demandeModel({
@@ -45,7 +50,7 @@ export class DemandesService {
         password: hashedPassword,
         nom: createDemandeDto.nom,
         prenom: createDemandeDto.prenom,
-        date: createDemandeDto.date
+        date: createDemandeDto.date,
       });
 
       // Sauvegarder la demande
@@ -59,7 +64,7 @@ export class DemandesService {
 
       return { message: 'Demande enregistrée avec succès', data: newDemande };
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement de la demande :', error);
+      console.error("Erreur lors de l'enregistrement de la demande :", error);
       throw error;
     }
   }
@@ -74,11 +79,13 @@ export class DemandesService {
     }
   }
 
-  async approveDemande(id: string): Promise<{ message: string; qrCode?: string }> {
+  async approveDemande(
+    id: string,
+  ): Promise<{ message: string; qrCode?: string }> {
     try {
       // Trouver la demande et l'approuver
       const demande = await this.demandeModel.findById(id);
-      
+
       if (!demande) {
         throw new NotFoundException('Demande non trouvée');
       }
@@ -90,21 +97,21 @@ export class DemandesService {
       const profileUrl = `https://connect2card.ci/${demande.userName}`;
       // Générer le QR code à partir de l'URL
       const qrCodeImage = await QRCode.toDataURL(profileUrl);
-      
+
       // Ajouter l'utilisateur à la collection 'users' - EXACTEMENT comme l'ancien code
       const newUser = new this.userModel({
         userName: demande.userName,
         phoneNumber: demande.phoneNumber,
         password: demande.password, // Déjà hashé
         email: demande.email,
-        qrCode: qrCodeImage
+        qrCode: qrCodeImage,
       });
 
       await newUser.save();
 
-      return { 
-        message: 'Demande approuvée avec succès', 
-        qrCode: qrCodeImage 
+      return {
+        message: 'Demande approuvée avec succès',
+        qrCode: qrCodeImage,
       };
     } catch (error) {
       console.error(error);
@@ -116,7 +123,7 @@ export class DemandesService {
     try {
       // Trouver la demande et la rejeter
       const demande = await this.demandeModel.findById(id);
-      
+
       if (!demande) {
         throw new NotFoundException('Demande non trouvée');
       }
@@ -164,4 +171,4 @@ export class DemandesService {
 
     await this.transporter.sendMail(mailOptions);
   }
-} 
+}

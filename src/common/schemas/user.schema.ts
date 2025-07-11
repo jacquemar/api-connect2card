@@ -125,10 +125,12 @@ export class User {
   @Prop({ default: false })
   isSuspended: boolean;
 
-  @Prop([{
-    date: { type: Date, default: Date.now },
-    count: { type: Number, default: 1 }
-  }])
+  @Prop([
+    {
+      date: { type: Date, default: Date.now },
+      count: { type: Number, default: 1 },
+    },
+  ])
   visitsHistory: Array<{ date: Date; count: number }>;
 
   @Prop()
@@ -138,4 +140,4 @@ export class User {
   resetPasswordExpires: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User); 
+export const UserSchema = SchemaFactory.createForClass(User);

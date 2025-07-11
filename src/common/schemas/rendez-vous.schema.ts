@@ -21,9 +21,9 @@ export class RendezVous {
     type: {
       nom: { type: String, required: true, trim: true },
       telephone: { type: String, required: true, trim: true },
-      motif: { type: String, required: true, trim: true }
+      motif: { type: String, required: true, trim: true },
     },
-    required: true
+    required: true,
   })
   demandeur: {
     nom: string;
@@ -31,12 +31,12 @@ export class RendezVous {
     motif: string;
   };
 
-  @Prop({ 
-    type: String, 
-    enum: ['en_attente', 'confirme', 'annule', 'termine'], 
-    default: 'en_attente' 
+  @Prop({
+    type: String,
+    enum: ['en_attente', 'confirme', 'annule', 'termine'],
+    default: 'en_attente',
   })
   statut: string;
 }
 
-export const RendezVousSchema = SchemaFactory.createForClass(RendezVous); 
+export const RendezVousSchema = SchemaFactory.createForClass(RendezVous);

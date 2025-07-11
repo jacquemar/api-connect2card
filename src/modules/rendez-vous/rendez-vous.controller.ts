@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Patch, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { RendezVousService } from './rendez-vous.service';
 
-@Controller('api')
+@Controller()
 export class RendezVousController {
   constructor(private readonly rendezVousService: RendezVousService) {}
 
@@ -13,7 +21,7 @@ export class RendezVousController {
   @Get('users/:userName/rendez-vous')
   async getRendezVousByUser(
     @Param('userName') userName: string,
-    @Query('statut') statut?: string
+    @Query('statut') statut?: string,
   ) {
     return this.rendezVousService.getRendezVousByUser(userName, statut);
   }
@@ -21,8 +29,8 @@ export class RendezVousController {
   @Patch('rendez-vous/:id/statut')
   async updateRendezVousStatus(
     @Param('id') id: string,
-    @Body('statut') statut: string
+    @Body('statut') statut: string,
   ) {
     return this.rendezVousService.updateRendezVousStatus(id, statut);
   }
-} 
+}

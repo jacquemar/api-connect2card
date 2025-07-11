@@ -23,10 +23,10 @@ export class Demande {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ 
-    type: String, 
-    enum: ['pending', 'approved', 'rejected'], 
-    default: 'pending' 
+  @Prop({
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
   })
   status: string;
 
@@ -34,4 +34,4 @@ export class Demande {
   date: string;
 }
 
-export const DemandeSchema = SchemaFactory.createForClass(Demande); 
+export const DemandeSchema = SchemaFactory.createForClass(Demande);

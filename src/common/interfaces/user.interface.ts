@@ -98,4 +98,4 @@ export interface IMessage {
   statut: 'non_lu' | 'lu' | 'archive';
   createdAt?: Date;
   updatedAt?: Date;
-} 
+}

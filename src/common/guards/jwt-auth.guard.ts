@@ -14,11 +14,11 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    
+
     if (!token) {
-      throw new UnauthorizedException('Token d\'accès requis');
+      throw new UnauthorizedException("Token d'accès requis");
     }
-    
+
     try {
       const payload = await this.jwtService.verifyAsync(token);
       // Attacher les informations utilisateur à la requête
@@ -26,7 +26,7 @@ export class JwtAuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException('Token invalide');
     }
-    
+
     return true;
   }
 
@@ -34,4 +34,4 @@ export class JwtAuthGuard implements CanActivate {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
-} 
+}

@@ -10,4 +10,4 @@ export class CreateDemandeDto {
 
 export class UpdateDemandeStatusDto {
   status: 'pending' | 'approved' | 'rejected';
-} 
+}

@@ -4,21 +4,25 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 export class RendezVousService {
   async createRendezVous(createRendezVousDto: any): Promise<any> {
     try {
-      const { utilisateurUserName, date, heure, demandeur } = createRendezVousDto;
+      const { utilisateurUserName, date, heure, demandeur } =
+        createRendezVousDto;
 
       console.log('Recherche utilisateur avec userName:', utilisateurUserName);
-      
+
       // TODO: Vérifier que l'utilisateur existe
       // const utilisateur = await User.findOne({ userName: utilisateurUserName });
-      
+
       // Simulation pour l'exemple
       const utilisateur = null;
-      
+
       if (!utilisateur) {
-        console.log('Utilisateur non trouvé pour userName:', utilisateurUserName);
+        console.log(
+          'Utilisateur non trouvé pour userName:',
+          utilisateurUserName,
+        );
         throw new NotFoundException('Utilisateur non trouvé');
       }
-      
+
       console.log('Utilisateur trouvé:', utilisateur);
 
       // Convertir la date française en format Date
@@ -34,18 +38,17 @@ export class RendezVousService {
         demandeur: {
           nom: demandeur.nom,
           telephone: demandeur.telephone,
-          motif: demandeur.motif
-        }
+          motif: demandeur.motif,
+        },
       };
 
       // TODO: Sauvegarder le rendez-vous
       // await nouveauRendezVous.save();
 
-      return { 
+      return {
         message: 'Rendez-vous créé avec succès',
-        rendezVous: nouveauRendezVous
+        rendezVous: nouveauRendezVous,
       };
-
     } catch (error) {
       console.error('Erreur lors de la création du rendez-vous:', error);
       throw error;
@@ -56,10 +59,10 @@ export class RendezVousService {
     try {
       // TODO: Vérifier que l'utilisateur existe
       // const utilisateur = await User.findOne({ userName });
-      
+
       // Simulation pour l'exemple
       const utilisateur = null;
-      
+
       if (!utilisateur) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -75,7 +78,6 @@ export class RendezVousService {
       //   .populate('utilisateur', 'nomComplet userName');
 
       return [];
-
     } catch (error) {
       console.error('Erreur lors de la récupération des rendez-vous:', error);
       throw error;
@@ -99,10 +101,9 @@ export class RendezVousService {
         message: 'Statut du rendez-vous mis à jour avec succès',
         // rendezVous: rendezVous
       };
-
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut:', error);
       throw error;
     }
   }
-} 
+}

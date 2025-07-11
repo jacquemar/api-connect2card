@@ -24,4 +24,4 @@ export class Appointment {
   message: string;
 }
 
-export const AppointmentSchema = SchemaFactory.createForClass(Appointment); 
+export const AppointmentSchema = SchemaFactory.createForClass(Appointment);
