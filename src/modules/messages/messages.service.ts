@@ -15,7 +15,7 @@ export class MessagesService {
     try {
       const { destinataireUserName, expediteur, message } = createMessageDto;
 
-      // Vérifier que l'utilisateur destinataire existe
+      // Vérifier que l'utilisateur dest existe
       const utilisateur = await this.userModel.findOne({ userName: destinataireUserName });
 
       if (!utilisateur) {
