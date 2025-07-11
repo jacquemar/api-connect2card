@@ -6,11 +6,25 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configuration CORS
+  // Configuration CORS sécurisée pour la production
+  const corsOrigins =
+    process.env.NODE_ENV === 'production'
+      ? process.env.CORS_ORIGINS?.split(',') || []
+      : true; // En développement, autorise toutes les origines
+
   app.enableCors({
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: corsOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+    ],
+    credentials: true, // Important pour les cookies/sessions
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
   // Validation globale des DTOs
