@@ -64,7 +64,7 @@ jobs:
             # Run new container with environment variables
             docker run -d --name api-connect2card \
               -p 2001:2001 \
-              -e MONGODB_URI="${{ secrets.MONGDB_URI }}" \
+              -e MONGODB_URI="${{ secrets.MONGODB_URI }}" \
               -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
               -e PORT=2001 \
               -e USERSMTP="${{ secrets.USERSMTP }}" \
