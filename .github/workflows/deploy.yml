@@ -69,6 +69,7 @@ jobs:
               -e PORT=2001 \
               -e USERSMTP="${{ secrets.USERSMTP }}" \
               -e USERHOST="${{ secrets.USERHOST }}" \
+              -e CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
               -e NODE_ENV="production" \
               -e PORT=2001 \
               --restart unless-stopped \
