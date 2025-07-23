@@ -56,7 +56,6 @@ export class UsersService {
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé.');
       }
-
       return user;
     } catch (error) {
       console.error(
@@ -159,8 +158,13 @@ export class UsersService {
         throw new BadRequestException('Le profil est désactivé');
       }
 
-      // Mettre à jour les champs fournis et décrémenter le crédit
-      Object.assign(user, updateUserProfileDto);
+      // Mettre à jour uniquement les champs fournis
+      for (const key of Object.keys(updateUserProfileDto)) {
+        const value = updateUserProfileDto[key];
+        if (typeof value !== 'undefined') {
+          user[key] = value;
+        }
+      }
 
       if (user.credit > 0) {
         user.credit -= 1;
@@ -298,21 +302,22 @@ export class UsersService {
         user.web ? `URL:${user.web}` : '',
         user.address ? `ADR:;;${user.address};;;;` : '',
         user.facebook ? `X-SOCIALPROFILE;TYPE=facebook:${user.facebook}` : '',
-        user.instagram ? `X-SOCIALPROFILE;TYPE=instagram:${user.instagram}` : '',
+        user.instagram
+          ? `X-SOCIALPROFILE;TYPE=instagram:${user.instagram}`
+          : '',
         user.linkedin ? `X-SOCIALPROFILE;TYPE=linkedin:${user.linkedin}` : '',
         user.twitter ? `X-SOCIALPROFILE;TYPE=twitter:${user.twitter}` : '',
         user.whatsapp ? `X-SOCIALPROFILE;TYPE=whatsapp:${user.whatsapp}` : '',
         user.photoProfilURL ? `PHOTO:${user.photoProfilURL}` : '',
         `NOTE:Carte de visite numérique Connect2Card - ${user.userName}`,
-        'END:VCARD'
-      ].filter(line => line.trim() !== '').join('\r\n');
+        'END:VCARD',
+      ]
+        .filter((line) => line.trim() !== '')
+        .join('\r\n');
 
       return vCardContent;
     } catch (error) {
-      console.error(
-        "Erreur lors de la génération de la vCard :",
-        error,
-      );
+      console.error('Erreur lors de la génération de la vCard :', error);
       throw error;
     }
   }

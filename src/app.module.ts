@@ -10,6 +10,7 @@ import { DemandesModule } from './modules/demandes/demandes.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
+import { GeoReverseModule } from './geo-reverse/geo-reverse.module';
 
 @Module({
   imports: [
@@ -19,7 +20,9 @@ import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI') || 'mongodb://localhost:27017/ConnectDb',
+        uri:
+          configService.get<string>('MONGODB_URI') ||
+          'mongodb://localhost:27017/ConnectDb',
       }),
       inject: [ConfigService],
     }),
@@ -29,7 +32,9 @@ import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
       useFactory: async (configService: ConfigService) => {
         const secret = configService.get<string>('JWT_SECRET');
         if (!secret) {
-          throw new Error('JWT_SECRET doit être défini dans les variables d\'environnement');
+          throw new Error(
+            "JWT_SECRET doit être défini dans les variables d'environnement",
+          );
         }
         return {
           secret,
@@ -39,7 +44,7 @@ import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
             issuer: 'connect2card-api',
             audience: 'connect2card-client',
             // Ajout d'un jitter aléatoire pour éviter les collisions de tokens
-            jwtid: Math.random().toString(36).substring(7)
+            jwtid: Math.random().toString(36).substring(7),
           },
         };
       },
@@ -51,6 +56,7 @@ import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
     AppointmentsModule,
     MessagesModule,
     RendezVousModule,
+    GeoReverseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

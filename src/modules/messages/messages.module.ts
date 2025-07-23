@@ -16,4 +16,4 @@ import { User, UserSchema } from '../../common/schemas/user.schema';
   providers: [MessagesService],
   exports: [MessagesService],
 })
-export class MessagesModule {} 
+export class MessagesModule {}

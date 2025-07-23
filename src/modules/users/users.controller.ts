@@ -9,6 +9,7 @@ import {
   Headers,
   UseGuards,
   Res,
+  Put,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -19,6 +20,7 @@ import {
 import { Response } from 'express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UpdateUserProfileDto } from '../../common/dto/user.dto';
 
 @ApiTags('Users')
 @Controller()
@@ -78,7 +80,7 @@ export class UsersController {
   }
 
   @Get('users/:userName/vcard')
-  @ApiOperation({ summary: 'Télécharger la vCard de l\'utilisateur' })
+  @ApiOperation({ summary: "Télécharger la vCard de l'utilisateur" })
   @ApiResponse({ status: 200, description: 'vCard téléchargée avec succès' })
   @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
   async downloadVcard(
@@ -87,20 +89,23 @@ export class UsersController {
   ) {
     try {
       const vCardContent = await this.usersService.generateVcard(userName);
-      
+
       // Incrémenter le compteur de téléchargements
       await this.usersService.incrementVcardDownload(userName);
-      
+
       // Configurer les en-têtes pour le téléchargement
       res.setHeader('Content-Type', 'text/vcard');
-      res.setHeader('Content-Disposition', `attachment; filename="${userName}.vcf"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${userName}.vcf"`,
+      );
       res.setHeader('Content-Length', Buffer.byteLength(vCardContent, 'utf8'));
-      
+
       return res.send(vCardContent);
     } catch (error) {
-      return res.status(404).json({ 
-        message: 'Utilisateur non trouvé', 
-        error: error.message 
+      return res.status(404).json({
+        message: 'Utilisateur non trouvé',
+        error: error.message,
       });
     }
   }
@@ -130,6 +135,23 @@ export class UsersController {
     @Query('period') period: string,
   ) {
     return this.usersService.getVisitsHistory(userName, period);
+  }
+
+  @Put('users/edit/:userName')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Éditer le profil utilisateur' })
+  @ApiResponse({
+    status: 200,
+    description: 'Profil utilisateur mis à jour avec succès',
+  })
+  @ApiResponse({ status: 400, description: 'Requête invalide' })
+  @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
+  async updateUserProfile(
+    @Param('userName') userName: string,
+    @Body() updateUserProfileDto: UpdateUserProfileDto,
+  ) {
+    return this.usersService.updateUserProfile(userName, updateUserProfileDto);
   }
 
   @Delete('user/:id')

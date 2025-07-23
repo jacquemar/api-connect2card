@@ -41,10 +41,12 @@ export class AuthService {
       // Recherche de l'utilisateur dans la base de données
       const user = await this.userModel.findOne({ userName });
       console.log('Utilisateur trouvé :', user);
-      
+
       if (!user) {
         console.log('Utilisateur non trouvé');
-        throw new UnauthorizedException("Nom d'utilisateur ou mot de passe incorrect.");
+        throw new UnauthorizedException(
+          "Nom d'utilisateur ou mot de passe incorrect.",
+        );
       }
 
       // Vérification du mot de passe
@@ -53,7 +55,9 @@ export class AuthService {
 
       if (!isPasswordValid) {
         console.log('Mot de passe incorrect');
-        throw new UnauthorizedException("Nom d'utilisateur ou mot de passe incorrect.");
+        throw new UnauthorizedException(
+          "Nom d'utilisateur ou mot de passe incorrect.",
+        );
       }
 
       // Créer le token JWT avec plus d'informations
@@ -64,10 +68,8 @@ export class AuthService {
         email: user.email,
         iat: Math.floor(Date.now() / 1000), // Timestamp actuel
       };
-      
 
       const token = this.jwtService.sign(payload);
-
 
       // Retourner le token et les informations de l'utilisateur (sans le mot de passe)
       const userResponse = {
@@ -79,7 +81,7 @@ export class AuthService {
         photoProfilURL: user.photoProfilURL,
       };
 
-      return { 
+      return {
         token,
         user: userResponse,
       };

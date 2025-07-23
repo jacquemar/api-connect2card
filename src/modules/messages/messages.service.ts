@@ -16,7 +16,9 @@ export class MessagesService {
       const { destinataireUserName, expediteur, message } = createMessageDto;
 
       // Vérifier que l'utilisateur dest existe
-      const utilisateur = await this.userModel.findOne({ userName: destinataireUserName });
+      const utilisateur = await this.userModel.findOne({
+        userName: destinataireUserName,
+      });
 
       if (!utilisateur) {
         throw new NotFoundException('Utilisateur non trouvé');
@@ -61,7 +63,8 @@ export class MessagesService {
         query.statut = statut;
       }
 
-      const messages = await this.messageModel.find(query)
+      const messages = await this.messageModel
+        .find(query)
         .sort({ createdAt: -1 })
         .populate('destinataire', 'nomComplet userName');
 
@@ -78,7 +81,7 @@ export class MessagesService {
       const message = await this.messageModel.findByIdAndUpdate(
         id,
         { statut: statut },
-        { new: true }
+        { new: true },
       );
 
       if (!message) {
@@ -87,7 +90,7 @@ export class MessagesService {
 
       return {
         message: 'Statut du message mis à jour avec succès',
-        messageData: message
+        messageData: message,
       };
     } catch (error) {
       console.error('Erreur lors de la mise à jour du statut:', error);
