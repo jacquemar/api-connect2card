@@ -11,6 +11,8 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { MessagesModule } from './modules/messages/messages.module';
 import { RendezVousModule } from './modules/rendez-vous/rendez-vous.module';
 import { GeoReverseModule } from './geo-reverse/geo-reverse.module';
+import { S3Module } from './services/s3.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { GeoReverseModule } from './geo-reverse/geo-reverse.module';
     MessagesModule,
     RendezVousModule,
     GeoReverseModule,
+    S3Module,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

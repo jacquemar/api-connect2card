@@ -1,43 +1,64 @@
 import { Injectable } from '@nestjs/common';
+import { S3Service } from '../../services/s3.service';
 
 @Injectable()
 export class UploadService {
+  constructor(private readonly s3Service: S3Service) {}
+
+  /**
+   * Upload une bannière
+   */
   async uploadBanniere(file: Express.Multer.File): Promise<{ url: string }> {
     try {
-      // TODO: Télécharger l'image vers Cloudinary
-      // const result = await cloudinary.uploader.upload(file.path);
-      // const imageUrl = result.secure_url;
+      const result = await this.s3Service.uploadFile(
+        file.buffer,
+        file.originalname,
+        file.mimetype,
+        'banners',
+      );
 
-      // Simulation pour l'exemple
-      const imageUrl = 'https://example.com/uploaded-banniere.jpg';
-
-      return { url: imageUrl };
+      return { url: result.url };
     } catch (error) {
       console.error('Erreur lors du téléchargement de la bannière:', error);
-      throw new Error(
-        "Une erreur s'est produite lors du téléchargement de la bannière.",
-      );
+      throw new Error('Erreur lors du téléchargement de la bannière');
     }
   }
 
+  /**
+   * Upload une photo de profil
+   */
   async uploadPhotoProfil(file: Express.Multer.File): Promise<{ url: string }> {
     try {
-      // TODO: Télécharger l'image vers Cloudinary
-      // const result = await cloudinary.uploader.upload(file.path);
-      // const imageUrl = result.secure_url;
+      const result = await this.s3Service.uploadFile(
+        file.buffer,
+        file.originalname,
+        file.mimetype,
+        'profiles',
+      );
 
-      // Simulation pour l'exemple
-      const imageUrl = 'https://example.com/uploaded-photo-profil.jpg';
-
-      return { url: imageUrl };
+      return { url: result.url };
     } catch (error) {
-      console.error(
-        'Erreur lors du téléchargement de la photo de profil:',
-        error,
+      console.error('Erreur lors du téléchargement de la photo de profil:', error);
+      throw new Error('Erreur lors du téléchargement de la photo de profil');
+    }
+  }
+
+  /**
+   * Upload une image générique
+   */
+  async uploadImage(file: Express.Multer.File, folder: string = 'images'): Promise<{ url: string }> {
+    try {
+      const result = await this.s3Service.uploadFile(
+        file.buffer,
+        file.originalname,
+        file.mimetype,
+        folder,
       );
-      throw new Error(
-        "Une erreur s'est produite lors du téléchargement de la photo de profil.",
-      );
+
+      return { url: result.url };
+    } catch (error) {
+      console.error('Erreur lors du téléchargement de l\'image:', error);
+      throw new Error('Erreur lors du téléchargement de l\'image');
     }
   }
 }
