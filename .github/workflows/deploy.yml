@@ -70,6 +70,10 @@ jobs:
               -e USERSMTP="${{ secrets.USERSMTP }}" \
               -e USERHOST="${{ secrets.USERHOST }}" \
               -e CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
+              -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"\
+              -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"\
+              -e AWS_S3_BUCKET="${{ secrets.AWS_S3_BUCKET }}"\
+              -e AWS_REGION="${{ secrets.AWS_REGION }}"\
               -e NODE_ENV="production" \
               -e PORT=2001 \
               --restart unless-stopped \
