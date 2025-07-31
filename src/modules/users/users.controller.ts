@@ -60,7 +60,7 @@ export class UsersController {
   }
 
   @Get('check-email')
-  @ApiOperation({ summary: "Vérifier la disponibilité d'un email" })
+  @ApiOperation({ summary: "Vérifier la disponibilité d'une adresse email" })
   @ApiResponse({
     status: 200,
     description: "Statut de disponibilité de l'email",
@@ -80,7 +80,7 @@ export class UsersController {
   }
 
   @Get('users/:userName/vcard')
-  @ApiOperation({ summary: "Télécharger la vCard de l'utilisateur" })
+  @ApiOperation({ summary: "Télécharger la vCard de l'utilisateur courant" })
   @ApiResponse({ status: 200, description: 'vCard téléchargée avec succès' })
   @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
   async downloadVcard(
@@ -163,5 +163,15 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Utilisateur non trouvé' })
   async deleteUser(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
+  }
+
+  @Put('users/toggle-status/:userName')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Activer ou désactiver un utilisateur' })
+  @ApiResponse({ status: 200, description: 'Statut modifié' })
+  @ApiResponse({ status: 401, description: 'Non autorisé' })
+  async toggleUserStatus(@Param('userName') userName: string) {
+    return this.usersService.toggleUserStatus(userName);
   }
 }
