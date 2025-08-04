@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { S3Service } from '../../services/s3.service';
 
 @Injectable()
@@ -9,6 +9,10 @@ export class UploadService {
    * Upload une bannière
    */
   async uploadBanniere(file: Express.Multer.File): Promise<{ url: string }> {
+    if (!file) {
+      throw new BadRequestException('Aucun fichier fourni');
+    }
+
     try {
       const result = await this.s3Service.uploadFile(
         file.buffer,
@@ -20,7 +24,7 @@ export class UploadService {
       return { url: result.url };
     } catch (error) {
       console.error('Erreur lors du téléchargement de la bannière:', error);
-      throw new Error('Erreur lors du téléchargement de la bannière');
+      throw new BadRequestException('Erreur lors du téléchargement de la bannière');
     }
   }
 
@@ -28,6 +32,10 @@ export class UploadService {
    * Upload une photo de profil
    */
   async uploadPhotoProfil(file: Express.Multer.File): Promise<{ url: string }> {
+    if (!file) {
+      throw new BadRequestException('Aucun fichier fourni');
+    }
+
     try {
       const result = await this.s3Service.uploadFile(
         file.buffer,
@@ -39,7 +47,7 @@ export class UploadService {
       return { url: result.url };
     } catch (error) {
       console.error('Erreur lors du téléchargement de la photo de profil:', error);
-      throw new Error('Erreur lors du téléchargement de la photo de profil');
+      throw new BadRequestException('Erreur lors du téléchargement de la photo de profil');
     }
   }
 
@@ -47,6 +55,10 @@ export class UploadService {
    * Upload une image générique
    */
   async uploadImage(file: Express.Multer.File, folder: string = 'images'): Promise<{ url: string }> {
+    if (!file) {
+      throw new BadRequestException('Aucun fichier fourni');
+    }
+
     try {
       const result = await this.s3Service.uploadFile(
         file.buffer,
@@ -58,7 +70,7 @@ export class UploadService {
       return { url: result.url };
     } catch (error) {
       console.error('Erreur lors du téléchargement de l\'image:', error);
-      throw new Error('Erreur lors du téléchargement de l\'image');
+      throw new BadRequestException('Erreur lors du téléchargement de l\'image');
     }
   }
 }

@@ -10,22 +10,22 @@ export class DemandesController {
     return this.demandesService.createDemande(createDemandeDto);
   }
 
-  @Get('api/demandes')
+  @Get('demandes')
   async getAllDemandes() {
     return this.demandesService.getAllDemandes();
   }
 
-  @Post('api/demandes/:id/approve')
+  @Post('demandes/:id/approve')
   async approveDemande(@Param('id') id: string) {
     return this.demandesService.approveDemande(id);
   }
 
-  @Post('api/demandes/:id/reject')
+  @Post('demandes/:id/reject')
   async rejectDemande(@Param('id') id: string) {
     return this.demandesService.rejectDemande(id);
   }
 
-  @Delete('api/demandes/:id')
+  @Delete('demandes/:id')
   async deleteDemande(@Param('id') id: string) {
     return this.demandesService.deleteDemande(id);
   }

@@ -24,7 +24,7 @@ export class GeoReverseController {
     }
     try {
       const result: any = await this.geoReverseService.reverseGeocode(lat, lon);
-      console.log('Résultat reverse geocode:', result);
+      //console.log('Résultat reverse geocode:', result);
       return result;
     } catch (error) {
       console.error('Erreur reverse geocode:', error);

@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { AdminModule } from './modules/admin/admin.module';
 import { DemandesModule } from './modules/demandes/demandes.module';
 import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { MessagesModule } from './modules/messages/messages.module';
@@ -54,6 +55,7 @@ import { UploadModule } from './modules/upload/upload.module';
     }),
     AuthModule,
     UsersModule,
+    AdminModule,
     DemandesModule,
     AppointmentsModule,
     MessagesModule,

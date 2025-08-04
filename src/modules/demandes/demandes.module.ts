@@ -4,6 +4,7 @@ import { DemandesController } from './demandes.controller';
 import { DemandesService } from './demandes.service';
 import { Demande, DemandeSchema } from '../../common/schemas/demande.schema';
 import { User, UserSchema } from '../../common/schemas/user.schema';
+import { EmailModule } from '../../services/email.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { User, UserSchema } from '../../common/schemas/user.schema';
       { name: Demande.name, schema: DemandeSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    EmailModule,
   ],
   controllers: [DemandesController],
   providers: [DemandesService],

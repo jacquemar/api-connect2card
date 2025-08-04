@@ -19,7 +19,7 @@ export class S3Service {
     const secretAccessKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
 
     if (!region || !accessKeyId || !secretAccessKey) {
-      throw new Error('AWS credentials are not properly configured. Please check your environment variables.');
+      throw new Error('les credentials aws ne sont pas correctement configurés. Veuillez vérifier vos variables d\'environnement.');
     }
 
     this.s3Client = new S3Client({

@@ -4,11 +4,24 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // Définir NODE_ENV si non défini
+  if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development';
+  }
+
   const app = await NestFactory.create(AppModule);
 
-  // Configuration CORS simplifiée
+  // Configuration CORS adaptée à l'environnement
+  const allowedOrigins = process.env.NODE_ENV === 'production' 
+    ? [
+        'https://connect2card.com',
+        'https://www.connect2card.com',
+        'https://api.connect2card.com'
+      ]
+    : ['http://localhost:3000', 'http://localhost:2000', 'http://localhost:5173'];
+
   app.enableCors({
-    origin: true, // Autorise toutes les origines en développement
+    origin: process.env.NODE_ENV === 'production' ? allowedOrigins : true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
@@ -18,6 +31,7 @@ async function bootstrap() {
       'Origin',
     ],
     credentials: true,
+    maxAge: 86400, // Cache preflight requests for 24 hours
   });
 
   // Validation globale des DTOs

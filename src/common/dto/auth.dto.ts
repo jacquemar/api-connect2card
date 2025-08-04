@@ -21,6 +21,26 @@ export class LoginDto {
   password: string;
 }
 
+export class AdminLoginDto {
+  @ApiProperty({
+    description: "Adresse email de l'administrateur",
+    example: 'admin@connect2card.com',
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({
+    description: 'Mot de passe administrateur (minimum 6 caractères)',
+    example: 'adminpassword123',
+    minLength: 6,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
+
 export class ForgotPasswordDto {
   @ApiProperty({
     description: "Adresse email de l'utilisateur",

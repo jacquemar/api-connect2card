@@ -2,30 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
-import * as nodemailer from 'nodemailer';
 import * as QRCode from 'qrcode';
 import { Demande, DemandeDocument } from '../../common/schemas/demande.schema';
 import { User, UserDocument } from '../../common/schemas/user.schema';
+import { EmailService } from '../../services/email.service';
 
 @Injectable()
 export class DemandesService {
   private readonly saltRounds = 10;
-  private transporter: nodemailer.Transporter;
 
   constructor(
     @InjectModel(Demande.name) private demandeModel: Model<DemandeDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-  ) {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.USERHOST,
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.USERSMTP,
-        pass: process.env.PASSWORDSMTP,
-      },
-    });
-  }
+    private readonly emailService: EmailService,
+  ) {}
 
   async createDemande(createDemandeDto: any): Promise<any> {
     try {
@@ -60,7 +50,7 @@ export class DemandesService {
       // const newPage = await notion.pages.create({...});
 
       // Envoyer l'e-mail de confirmation
-      await this.sendConfirmationEmail(createDemandeDto);
+      await this.emailService.sendConfirmationEmail(createDemandeDto);
 
       return { message: 'Demande enregistrée avec succès', data: newDemande };
     } catch (error) {
@@ -94,7 +84,7 @@ export class DemandesService {
       await demande.save();
 
       // Générer l'URL du profil
-      const profileUrl = `https://connect2card.ci/${demande.userName}`;
+      const profileUrl = `https://connect2card.com/${demande.userName}`;
       // Générer le QR code à partir de l'URL
       const qrCodeImage = await QRCode.toDataURL(profileUrl);
 
@@ -154,21 +144,5 @@ export class DemandesService {
     }
   }
 
-  private async sendConfirmationEmail(demandeData: any): Promise<void> {
-    const mailOptions = {
-      from: '"CONNECT TEAM" <support@connect2card.com>',
-      to: demandeData.email,
-      subject: `Félicitation 🎉 ${demandeData.userName}`,
-      html: `
-        <h1>Félicitations ${demandeData.userName}!</h1>
-        <p>Votre demande de carte a été enregistrée avec succès.</p>
-        <p>Nom: ${demandeData.nom}</p>
-        <p>Prénom: ${demandeData.prenom}</p>
-        <p>Téléphone: ${demandeData.phoneNumber}</p>
-        <p>Date: ${demandeData.date}</p>
-      `,
-    };
 
-    await this.transporter.sendMail(mailOptions);
-  }
 }
