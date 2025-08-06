@@ -1,0 +1,506 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <title></title>
+    <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
+    
+    @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      -webkit-text-size-adjust: none;
+    }
+    
+    a {
+      color: #3869D4;
+    }
+    
+    a img {
+      border: none;
+    }
+    
+    td {
+      word-break: break-word;
+    }
+    
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    /* Type ------------------------------ */
+    
+    body,
+    td,
+    th {
+      font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
+    }
+    
+    h1 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    h2 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    h3 {
+      margin-top: 0;
+      color: #333333;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    td,
+    th {
+      font-size: 16px;
+    }
+    
+    p,
+    ul,
+    ol,
+    blockquote {
+      margin: .4em 0 1.1875em;
+      font-size: 16px;
+      line-height: 1.625;
+    }
+    
+    p.sub {
+      font-size: 13px;
+    }
+    /* Utilities ------------------------------ */
+    
+    .align-right {
+      text-align: right;
+    }
+    
+    .align-left {
+      text-align: left;
+    }
+    
+    .align-center {
+      text-align: center;
+    }
+    
+    .u-margin-bottom-none {
+      margin-bottom: 0;
+    }
+    /* Buttons ------------------------------ */
+    
+    .button {
+      background-color: #3869D4;
+      border-top: 10px solid #3869D4;
+      border-right: 18px solid #3869D4;
+      border-bottom: 10px solid #3869D4;
+      border-left: 18px solid #3869D4;
+      display: inline-block;
+      color: #FFF;
+      text-decoration: none;
+      border-radius: 3px;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
+      -webkit-text-size-adjust: none;
+      box-sizing: border-box;
+    }
+    
+    .button--green {
+      background-color: #22BC66;
+      border-top: 10px solid #22BC66;
+      border-right: 18px solid #22BC66;
+      border-bottom: 10px solid #22BC66;
+      border-left: 18px solid #22BC66;
+    }
+    
+    .button--red {
+      background-color: #FF6136;
+      border-top: 10px solid #FF6136;
+      border-right: 18px solid #FF6136;
+      border-bottom: 10px solid #FF6136;
+      border-left: 18px solid #FF6136;
+    }
+    
+    @media only screen and (max-width: 500px) {
+      .button {
+        width: 100% !important;
+        text-align: center !important;
+      }
+    }
+    /* Attribute list ------------------------------ */
+    
+    .attributes {
+      margin: 0 0 21px;
+    }
+    
+    .attributes_content {
+      background-color: #F4F4F7;
+      padding: 16px;
+    }
+    
+    .attributes_item {
+      padding: 0;
+    }
+    /* Related Items ------------------------------ */
+    
+    .related {
+      width: 100%;
+      margin: 0;
+      padding: 25px 0 0 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .related_item {
+      padding: 10px 0;
+      color: #CBCCCF;
+      font-size: 15px;
+      line-height: 18px;
+    }
+    
+    .related_item-title {
+      display: block;
+      margin: .5em 0 0;
+    }
+    
+    .related_item-thumb {
+      display: block;
+      padding-bottom: 10px;
+    }
+    
+    .related_heading {
+      border-top: 1px solid #CBCCCF;
+      text-align: center;
+      padding: 25px 0 10px;
+    }
+    /* Discount Code ------------------------------ */
+    
+    .discount {
+      width: 100%;
+      margin: 0;
+      padding: 24px;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F4F4F7;
+      border: 2px dashed #CBCCCF;
+    }
+    
+    .discount_heading {
+      text-align: center;
+    }
+    
+    .discount_body {
+      text-align: center;
+      font-size: 15px;
+    }
+    /* Social Icons ------------------------------ */
+    
+    .social {
+      width: auto;
+    }
+    
+    .social td {
+      padding: 0;
+      width: auto;
+    }
+    
+    .social_icon {
+      height: 20px;
+      margin: 0 8px 10px 8px;
+      padding: 0;
+    }
+    /* Data table ------------------------------ */
+    
+    .purchase {
+      width: 100%;
+      margin: 0;
+      padding: 35px 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .purchase_content {
+      width: 100%;
+      margin: 0;
+      padding: 25px 0 0 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .purchase_item {
+      padding: 10px 0;
+      color: #51545E;
+      font-size: 15px;
+      line-height: 18px;
+    }
+    
+    .purchase_heading {
+      padding-bottom: 8px;
+      border-bottom: 1px solid #EAEAEC;
+    }
+    
+    .purchase_heading p {
+      margin: 0;
+      color: #85878E;
+      font-size: 12px;
+    }
+    
+    .purchase_footer {
+      padding-top: 15px;
+      border-top: 1px solid #EAEAEC;
+    }
+    
+    .purchase_total {
+      margin: 0;
+      text-align: right;
+      font-weight: bold;
+      color: #333333;
+    }
+    
+    .purchase_total--label {
+      padding: 0 15px 0 0;
+    }
+    
+    body {
+      background-color: #FFF;
+      color: #333;
+    }
+    
+    p {
+      color: #333;
+    }
+    
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    /* Masthead ----------------------- */
+    
+    .email-masthead {
+      padding: 25px 0;
+      text-align: center;
+    }
+    
+    .email-masthead_logo {
+      width: 94px;
+    }
+    
+    .email-masthead_name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #A8AAAF;
+      text-decoration: none;
+      text-shadow: 0 1px 0 white;
+    }
+    /* Body ------------------------------ */
+    
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .email-body_inner {
+      width: 570px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+    
+    .email-footer {
+      width: 570px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+    
+    .email-footer p {
+      color: #A8AAAF;
+    }
+    
+    .body-action {
+      width: 100%;
+      margin: 30px auto;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+    
+    .body-sub {
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #EAEAEC;
+    }
+    
+    .content-cell {
+      padding: 35px;
+    }
+    /*Media Queries ------------------------------ */
+    
+    @media only screen and (max-width: 600px) {
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #333333 !important;
+        color: #FFF !important;
+      }
+      p,
+      ul,
+      ol,
+      blockquote,
+      h1,
+      h2,
+      h3,
+      span,
+      .purchase_item {
+        color: #FFF !important;
+      }
+      .attributes_content,
+      .discount {
+        background-color: #222 !important;
+      }
+      .email-masthead_name {
+        text-shadow: none !important;
+      }
+    }
+    
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
+    </style>
+    <!--[if mso]>
+    <style type="text/css">
+      .f-fallback  {
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  <![endif]-->
+  </head>
+  <body>
+    <span class="preheader">Utilisez ce lien pour changer votre mot de passe. le lien est valide 1h.</span>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td class="email-masthead w-10">
+                <a href="https://connect2card.com" class="f-fallback email-masthead_name w-11">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXIAAAF8CAMAAADl8MBLAAAACXBIWXMAABcRAAAXEQHKJvM/AAACqVBMVEX///8NDAwiwmYixV4juXsjvXMjv20jwGojwGslp6klp6slqqQlrZsmorcmo7Qmpq0mpq4NDAwiwmYixV4ju3kjvHUkr5Ukt4Elq6ElrJ4mpLENDAwNDAwjvXElq6ElrJ4morcmpLENDAwiw2QixGAixGEixV4jvXEkr5Ukt4ElqaUmorcNDAwNDAwiwWciw2QixGAjuX0kt4MlqaUlrpomorcmo7UNDAwiwWciw2MjuX0ksJQlrpomorcmo7Qmo7UmpLImpa8NDAwixV4jvnAksJQkt4Mmorcmpa8NDAwixGAixV4junojvHQjvnAksJIktoQlqKclqqImorcmo7QNDAwiwWgixGAjvHQlqKclrJwmorcNDAwiwWgixGEjuH4junoju3cjv24jwGoksJIktoQlqKglqqIlq58lrJwlrpgmorcmpq4NDAwiwmYjuH4ju3cjv20jv24ksZEktYUlrpgmo7UNDAwiwmYixGAjwGoksZEkso4kspAktIgktYUktYclqKglq58mpLEmpq0NDAwiw2MjvXMjv20jwGsktYclp6klp6smorcmpLEmpq0NDAwiw2Miw2QjvXMkspAkuIAlqqQlr5cmo7QmpLINDAwiwWcixGEjuXsjvHUkuIAlqqQlrZsmpLImpa8NDAwNDAwiwWciwWgiwmYiw2Miw2QixGAixGEjuH4juXsjuX0junoju3cju3kjvHQjvHUjvXEjvXMjvnAjv20jv24jwGojwGskr5UksJIksJQksZEkso4kspAks4sks40ktIgktIoktYUktYcktoQkt4Ekt4MkuIAlp6klp6slqKclqKglqaUlqqIlqqQlq58lq6ElrJwlrJ4lrZslrpglrpolr5cmorcmo7Qmo7UmpLEmpLImpa8mpq0mpq6D+FpZAAAApXRSTlMAEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAuMDAwMDAwQEBAQEBAQEBAQExQUFBQUFBQUFBQYGBgYGBgYGBgYGBwcHBwcHBwgICAgICAgICAgICAkJCQkJCQkKCgoKCgoKCgoKCgoKCgoKCgsLCwsLCwsLCwsMDAwMDAwMDAwMDAwMDA0NDQ0NDQ0NDQ0NDg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" alt="">
+              	</a>
+              </td>
+            </tr>
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="570" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="content-cell">
+                      <div class="f-fallback">
+                        <h1>Hi {{nom}} {{prenom}},</h1>
+                        <p>Vous avez demandé une réinitialisation de mot de passe. Cliquez sur ce bouton pour changer votre mot de passe <strong>Ce lien est disponible pendant 1heure.</strong></p>
+                        <!-- Action -->
+                        <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <!-- Border based button
+           https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                                <tr>
+                                  <td align="center">
+                                    <a href="{{resetLink}}" class="f-fallback button button--green" target="_blank">Changer mon mot de passe</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <p>Pour votre sécurité, cette requête est reçu depuis un {{os}} de {{ipAddress}} utilisant comme navigateur {{browser}}. Si vous êtes pas à l'origine de cette requête, ignorez cet email ou <a href="mailto:support@connect2car.com">contact support</a> Si vous avez des questions.</p>
+                        <!-- Sub copy -->
+                        <table class="body-sub" role="presentation">
+                          <tr>
+                            <td>
+                              <p class="f-fallback sub">Si vous avez du mal avec le bouton, copiez et coller le lien directmeent dans le navigateur</p>
+                              <p class="f-fallback sub">{{resetLink}}</p>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td class="content-cell" align="center">
+                      <p class="f-fallback sub align-center">
+                        Connect Team
+                        <!-- <br>Paris-village, Bingerville. -->
+                        <br>Abidjan, Côte d'ivoire
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

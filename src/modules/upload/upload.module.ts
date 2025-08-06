@@ -11,4 +11,4 @@ import { HttpModule } from '@nestjs/axios';
   providers: [UploadService, S3Service],
   exports: [UploadService],
 })
-export class UploadModule {} 
+export class UploadModule {}

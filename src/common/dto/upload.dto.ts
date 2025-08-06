@@ -20,13 +20,9 @@ export class UploadPhotoDto {
   fileName?: string;
 }
 
-export class UploadProfilePhotoDto extends UploadPhotoDto {
-  
-}
+export class UploadProfilePhotoDto extends UploadPhotoDto {}
 
-export class UploadBannerPhotoDto extends UploadPhotoDto {
-  
-}
+export class UploadBannerPhotoDto extends UploadPhotoDto {}
 
 export class PresignedUrlDto {
   @ApiProperty({
@@ -53,4 +49,4 @@ export class PresignedUrlDto {
   @IsString()
   @IsOptional()
   folder?: string;
-} 
+}

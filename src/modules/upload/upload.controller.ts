@@ -22,7 +22,13 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 // Configuration pour la taille des fichiers (10MB)
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+];
 
 // Fonction de validation des fichiers
 const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
@@ -33,16 +39,18 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
     return callback(
       new BadRequestException(
-        `Type de fichier non autorisé. Types autorisés: ${ALLOWED_MIME_TYPES.join(', ')}`
+        `Type de fichier non autorisé. Types autorisés: ${ALLOWED_MIME_TYPES.join(', ')}`,
       ),
-      false
+      false,
     );
   }
 
   if (file.size > MAX_FILE_SIZE) {
     return callback(
-      new BadRequestException(`Fichier trop volumineux. Taille maximale: ${MAX_FILE_SIZE / (1024 * 1024)}MB`),
-      false
+      new BadRequestException(
+        `Fichier trop volumineux. Taille maximale: ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+      ),
+      false,
     );
   }
 
@@ -63,7 +71,7 @@ export class UploadController {
         fileSize: MAX_FILE_SIZE,
       },
       fileFilter: fileFilter,
-    })
+    }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -84,7 +92,10 @@ export class UploadController {
   })
   @ApiOperation({ summary: 'Uploader une image' })
   @ApiResponse({ status: 200, description: 'Image uploadée avec succès' })
-  @ApiResponse({ status: 400, description: 'Fichier invalide ou trop volumineux' })
+  @ApiResponse({
+    status: 400,
+    description: 'Fichier invalide ou trop volumineux',
+  })
   async uploadImage(
     @UploadedFile() file: any,
     @Query('folder') folder: string = 'images',
@@ -101,7 +112,7 @@ export class UploadController {
         fileSize: MAX_FILE_SIZE,
       },
       fileFilter: fileFilter,
-    })
+    }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -117,7 +128,10 @@ export class UploadController {
   })
   @ApiOperation({ summary: 'Uploader une bannière' })
   @ApiResponse({ status: 200, description: 'Bannière uploadée avec succès' })
-  @ApiResponse({ status: 400, description: 'Fichier invalide ou trop volumineux' })
+  @ApiResponse({
+    status: 400,
+    description: 'Fichier invalide ou trop volumineux',
+  })
   async uploadBanniere(@UploadedFile() file: any) {
     return this.uploadService.uploadBanniere(file);
   }
@@ -131,7 +145,7 @@ export class UploadController {
         fileSize: MAX_FILE_SIZE,
       },
       fileFilter: fileFilter,
-    })
+    }),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -150,7 +164,10 @@ export class UploadController {
     status: 200,
     description: 'Photo de profil uploadée avec succès',
   })
-  @ApiResponse({ status: 400, description: 'Fichier invalide ou trop volumineux' })
+  @ApiResponse({
+    status: 400,
+    description: 'Fichier invalide ou trop volumineux',
+  })
   async uploadPhotoProfil(@UploadedFile() file: any) {
     return this.uploadService.uploadPhotoProfil(file);
   }

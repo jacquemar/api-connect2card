@@ -9,10 +9,7 @@ export class RendezVousService {
 
       console.log('Recherche utilisateur avec userName:', utilisateurUserName);
 
-      // TODO: Vérifier que l'utilisateur existe
-      // const utilisateur = await User.findOne({ userName: utilisateurUserName });
 
-      // Simulation pour l'exemple
       const utilisateur = null;
 
       if (!utilisateur) {
@@ -41,9 +38,6 @@ export class RendezVousService {
           motif: demandeur.motif,
         },
       };
-
-      // TODO: Sauvegarder le rendez-vous
-      // await nouveauRendezVous.save();
 
       return {
         message: 'Rendez-vous créé avec succès',

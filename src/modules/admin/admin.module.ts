@@ -8,13 +8,11 @@ import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule,
   ],
   controllers: [AdminController],
   providers: [AdminService, AdminAuthGuard],
   exports: [AdminService],
 })
-export class AdminModule {} 
+export class AdminModule {}

@@ -11,28 +11,20 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  // Configuration CORS adaptée à l'environnement
-  const allowedOrigins = process.env.NODE_ENV === 'production' 
-    ? [
-        'https://connect2card.com',
-        'https://www.connect2card.com',
-        'https://api.connect2card.com'
-      ]
-    : ['http://localhost:3000', 'http://localhost:2000', 'http://localhost:5173'];
-
+  // Configuration CORS simplifiée et permissive pour le développement
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production' ? allowedOrigins : true,
+    origin: true, // Autorise toutes les origines en développement
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Accept',
-      'Origin',
-    ],
+    allowedHeaders: ['*'], // Autorise tous les headers
     credentials: true,
-    maxAge: 86400, // Cache preflight requests for 24 hours
+    maxAge: 86400,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
+
+  // Log de la configuration CORS
+  console.log(`🌐 Configuration CORS - Environnement: ${process.env.NODE_ENV}`);
+  console.log('🌐 Origines autorisées: Toutes les origines (développement)');
 
   // Validation globale des DTOs
   app.useGlobalPipes(

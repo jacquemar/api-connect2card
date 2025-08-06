@@ -16,10 +16,14 @@ export class S3Service {
   constructor(private configService: ConfigService) {
     const region = this.configService.get<string>('AWS_REGION');
     const accessKeyId = this.configService.get<string>('AWS_ACCESS_KEY_ID');
-    const secretAccessKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
+    const secretAccessKey = this.configService.get<string>(
+      'AWS_SECRET_ACCESS_KEY',
+    );
 
     if (!region || !accessKeyId || !secretAccessKey) {
-      throw new Error('les credentials aws ne sont pas correctement configurés. Veuillez vérifier vos variables d\'environnement.');
+      throw new Error(
+        "les credentials aws ne sont pas correctement configurés. Veuillez vérifier vos variables d'environnement.",
+      );
     }
 
     this.s3Client = new S3Client({
@@ -68,9 +72,9 @@ export class S3Service {
         key: key,
       };
     } catch (error) {
-      console.error('Erreur lors de l\'upload vers S3:', error);
+      console.error("Erreur lors de l'upload vers S3:", error);
       throw new HttpException(
-        'Erreur lors de l\'upload du fichier',
+        "Erreur lors de l'upload du fichier",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

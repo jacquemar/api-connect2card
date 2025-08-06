@@ -9,23 +9,25 @@ import { User, UserDocument } from '../../common/schemas/user.schema';
 
 @Injectable()
 export class AdminService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getDashboardStats() {
     try {
       const totalUsers = await this.userModel.countDocuments();
-      const activeUsers = await this.userModel.countDocuments({ isActive: true });
-      const suspendedUsers = await this.userModel.countDocuments({ isSuspended: true });
+      const activeUsers = await this.userModel.countDocuments({
+        isActive: true,
+      });
+      const suspendedUsers = await this.userModel.countDocuments({
+        isSuspended: true,
+      });
       const adminUsers = await this.userModel.countDocuments({ role: 'admin' });
 
       // Statistiques des 7 derniers jours
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      
+
       const newUsersThisWeek = await this.userModel.countDocuments({
-        createdAt: { $gte: sevenDaysAgo }
+        createdAt: { $gte: sevenDaysAgo },
       });
 
       return {
@@ -37,14 +39,16 @@ export class AdminService {
         lastUpdated: new Date(),
       };
     } catch (error) {
-      throw new BadRequestException('Erreur lors de la récupération des statistiques');
+      throw new BadRequestException(
+        'Erreur lors de la récupération des statistiques',
+      );
     }
   }
 
   async getUsers(page: number = 1, limit: number = 10, search?: string) {
     try {
       const skip = (page - 1) * limit;
-      
+
       let query = {};
       if (search) {
         query = {
@@ -75,14 +79,16 @@ export class AdminService {
         },
       };
     } catch (error) {
-      throw new BadRequestException('Erreur lors de la récupération des utilisateurs');
+      throw new BadRequestException(
+        'Erreur lors de la récupération des utilisateurs',
+      );
     }
   }
 
   async getUserById(id: string) {
     try {
       const user = await this.userModel.findById(id).select('-password');
-      
+
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -92,27 +98,34 @@ export class AdminService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new BadRequestException('Erreur lors de la récupération de l\'utilisateur');
+      throw new BadRequestException(
+        "Erreur lors de la récupération de l'utilisateur",
+      );
     }
   }
 
-  async updateUserStatus(id: string, body: { isActive: boolean; isSuspended: boolean }) {
+  async updateUserStatus(
+    id: string,
+    body: { isActive: boolean; isSuspended: boolean },
+  ) {
     try {
-      const user = await this.userModel.findByIdAndUpdate(
-        id,
-        {
-          isActive: body.isActive,
-          isSuspended: body.isSuspended,
-        },
-        { new: true }
-      ).select('-password');
+      const user = await this.userModel
+        .findByIdAndUpdate(
+          id,
+          {
+            isActive: body.isActive,
+            isSuspended: body.isSuspended,
+          },
+          { new: true },
+        )
+        .select('-password');
 
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
 
       return {
-        message: 'Statut de l\'utilisateur mis à jour avec succès',
+        message: "Statut de l'utilisateur mis à jour avec succès",
         user,
       };
     } catch (error) {
@@ -126,7 +139,7 @@ export class AdminService {
   async deleteUser(id: string) {
     try {
       const user = await this.userModel.findByIdAndDelete(id);
-      
+
       if (!user) {
         throw new NotFoundException('Utilisateur non trouvé');
       }
@@ -138,28 +151,37 @@ export class AdminService {
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new BadRequestException('Erreur lors de la suppression de l\'utilisateur');
+      throw new BadRequestException(
+        "Erreur lors de la suppression de l'utilisateur",
+      );
     }
   }
 
   async getAdminProfile(adminId: string) {
     try {
       const admin = await this.userModel.findById(adminId).select('-password');
-      
+
       if (!admin) {
         throw new NotFoundException('Administrateur non trouvé');
       }
 
       if (admin.role !== 'admin') {
-        throw new BadRequestException('Accès refusé. Rôle administrateur requis.');
+        throw new BadRequestException(
+          'Accès refusé. Rôle administrateur requis.',
+        );
       }
 
       return admin;
     } catch (error) {
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
-      throw new BadRequestException('Erreur lors de la récupération du profil admin');
+      throw new BadRequestException(
+        'Erreur lors de la récupération du profil admin',
+      );
     }
   }
-} 
+}

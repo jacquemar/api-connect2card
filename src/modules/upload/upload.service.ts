@@ -24,7 +24,9 @@ export class UploadService {
       return { url: result.url };
     } catch (error) {
       console.error('Erreur lors du téléchargement de la bannière:', error);
-      throw new BadRequestException('Erreur lors du téléchargement de la bannière');
+      throw new BadRequestException(
+        'Erreur lors du téléchargement de la bannière',
+      );
     }
   }
 
@@ -46,15 +48,23 @@ export class UploadService {
 
       return { url: result.url };
     } catch (error) {
-      console.error('Erreur lors du téléchargement de la photo de profil:', error);
-      throw new BadRequestException('Erreur lors du téléchargement de la photo de profil');
+      console.error(
+        'Erreur lors du téléchargement de la photo de profil:',
+        error,
+      );
+      throw new BadRequestException(
+        'Erreur lors du téléchargement de la photo de profil',
+      );
     }
   }
 
   /**
    * Upload une image générique
    */
-  async uploadImage(file: Express.Multer.File, folder: string = 'images'): Promise<{ url: string }> {
+  async uploadImage(
+    file: Express.Multer.File,
+    folder: string = 'images',
+  ): Promise<{ url: string }> {
     if (!file) {
       throw new BadRequestException('Aucun fichier fourni');
     }
@@ -69,8 +79,8 @@ export class UploadService {
 
       return { url: result.url };
     } catch (error) {
-      console.error('Erreur lors du téléchargement de l\'image:', error);
-      throw new BadRequestException('Erreur lors du téléchargement de l\'image');
+      console.error("Erreur lors du téléchargement de l'image:", error);
+      throw new BadRequestException("Erreur lors du téléchargement de l'image");
     }
   }
 }

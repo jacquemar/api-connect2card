@@ -143,6 +143,4 @@ export class DemandesService {
       throw error;
     }
   }
-
-
 }

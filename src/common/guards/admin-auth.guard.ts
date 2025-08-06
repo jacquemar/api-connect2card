@@ -14,19 +14,21 @@ export class AdminAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    
+
     if (!token) {
-      throw new UnauthorizedException('Token d\'authentification manquant');
+      throw new UnauthorizedException("Token d'authentification manquant");
     }
-    
+
     try {
       const payload = await this.jwtService.verifyAsync(token);
-      
+
       // Vérifier que l'utilisateur a le rôle admin
       if (payload.role !== 'admin') {
-        throw new UnauthorizedException('Accès refusé. Rôle administrateur requis.');
+        throw new UnauthorizedException(
+          'Accès refusé. Rôle administrateur requis.',
+        );
       }
-      
+
       // Ajouter les informations de l'utilisateur à la requête
       request['user'] = payload;
       return true;
@@ -39,4 +41,4 @@ export class AdminAuthGuard implements CanActivate {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
-} 
+}

@@ -101,8 +101,8 @@ export class AuthService {
       const token = crypto.randomBytes(20).toString('hex');
 
       // Obtenir les informations de la requête
-      const ipAddress = Array.isArray(req.headers['x-forwarded-for']) 
-        ? req.headers['x-forwarded-for'][0] 
+      const ipAddress = Array.isArray(req.headers['x-forwarded-for'])
+        ? req.headers['x-forwarded-for'][0]
         : req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       const userAgent = Array.isArray(req.headers['user-agent'])
         ? req.headers['user-agent'][0]
@@ -216,14 +216,14 @@ export class AuthService {
   async createDefaultAdmin(): Promise<{ message: string; admin: any }> {
     try {
       // Vérifier si l'admin existe déjà
-      const existingAdmin = await this.userModel.findOne({ 
+      const existingAdmin = await this.userModel.findOne({
         email: 'arnaude.timite12@gmail.com',
-        role: 'admin'
+        role: 'admin',
       });
 
       if (existingAdmin) {
         return {
-          message: 'L\'administrateur existe déjà dans la base de données',
+          message: "L'administrateur existe déjà dans la base de données",
           admin: {
             email: existingAdmin.email,
             userName: existingAdmin.userName,
@@ -250,7 +250,7 @@ export class AuthService {
       });
 
       await adminUser.save();
-      
+
       return {
         message: 'Administrateur créé avec succès !',
         admin: {
@@ -261,8 +261,8 @@ export class AuthService {
         },
       };
     } catch (error) {
-      console.error('Erreur lors de la création de l\'administrateur:', error);
-      throw new Error('Erreur lors de la création de l\'administrateur');
+      console.error("Erreur lors de la création de l'administrateur:", error);
+      throw new Error("Erreur lors de la création de l'administrateur");
     }
   }
 

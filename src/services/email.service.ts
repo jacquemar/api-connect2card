@@ -1,22 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter: nodemailer.Transporter;
+  private gmail_user: string;
+  private gmail_pass: string;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
+    this.gmail_user = this.configService.get<string>('GMAIL_USER') || '';
+    this.gmail_pass = this.configService.get<string>('GMAIL_APP_PASSWORD') || '';
     this.initializeTransporter();
   }
 
   private initializeTransporter() {
+    // Vérifier que les identifiants sont présents
+    if (!this.gmail_user || !this.gmail_pass) {
+      this.logger.warn('Variables d\'environnement email manquantes. Service email désactivé.');
+      return;
+    }
+
     // Configuration pour Gmail
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', 
+      service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER, 
-        pass: process.env.GMAIL_APP_PASSWORD,
+        user: this.gmail_user,
+        pass: this.gmail_pass,
       },
     });
 
@@ -36,9 +47,15 @@ export class EmailService {
     html: string;
     from?: string;
   }): Promise<void> {
+    // Vérifier que le transporteur est initialisé
+    if (!this.transporter) {
+      this.logger.warn('Service email non configuré. Email non envoyé.');
+      return;
+    }
+
     try {
       const options = {
-        from: mailOptions.from || `"CONNECT TEAM" <${process.env.GMAIL_USER}>`,
+        from: mailOptions.from || `"CONNECT TEAM" <${this.gmail_user}>`,
         to: mailOptions.to,
         subject: mailOptions.subject,
         html: mailOptions.html,

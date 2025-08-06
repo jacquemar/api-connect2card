@@ -9,7 +9,12 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { CurrentAdmin } from '../../common/decorators/current-admin.decorator';
 import { AdminService } from './admin.service';
@@ -46,20 +51,20 @@ export class AdminController {
   }
 
   @Get('users/:id')
-  @ApiOperation({ summary: 'Obtenir les détails d\'un utilisateur' })
+  @ApiOperation({ summary: "Obtenir les détails d'un utilisateur" })
   @ApiResponse({
     status: 200,
-    description: 'Détails de l\'utilisateur récupérés avec succès',
+    description: "Détails de l'utilisateur récupérés avec succès",
   })
   async getUserById(@Param('id') id: string) {
     return this.adminService.getUserById(id);
   }
 
   @Put('users/:id/status')
-  @ApiOperation({ summary: 'Modifier le statut d\'un utilisateur' })
+  @ApiOperation({ summary: "Modifier le statut d'un utilisateur" })
   @ApiResponse({
     status: 200,
-    description: 'Statut de l\'utilisateur modifié avec succès',
+    description: "Statut de l'utilisateur modifié avec succès",
   })
   async updateUserStatus(
     @Param('id') id: string,
@@ -79,12 +84,12 @@ export class AdminController {
   }
 
   @Get('profile')
-  @ApiOperation({ summary: 'Obtenir le profil de l\'administrateur connecté' })
+  @ApiOperation({ summary: "Obtenir le profil de l'administrateur connecté" })
   @ApiResponse({
     status: 200,
-    description: 'Profil de l\'administrateur récupéré avec succès',
+    description: "Profil de l'administrateur récupéré avec succès",
   })
   async getAdminProfile(@CurrentAdmin() admin: any) {
     return this.adminService.getAdminProfile(admin.userId);
   }
-} 
+}
