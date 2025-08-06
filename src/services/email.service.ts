@@ -34,6 +34,21 @@ export class EmailService {
   constructor(private configService: ConfigService) {
     this.gmail_user = this.configService.get<string>('GMAIL_USER') || '';
     this.gmail_pass = this.configService.get<string>('GMAIL_APP_PASSWORD') || '';
+
+    // Log pour déboguer les variables d'environnement
+    this.logger.log(`GMAIL_USER configuré: ${this.gmail_user ? 'OUI' : 'NON'}`);
+    this.logger.log(
+      `GMAIL_APP_PASSWORD configuré: ${this.gmail_pass ? 'OUI' : 'NON'}`,
+    );
+
+    // Log des variables d'environnement disponibles (sans afficher les valeurs sensibles)
+    const envVars = Object.keys(process.env).filter((key) =>
+      key.includes('GMAIL'),
+    );
+    this.logger.log(
+      `Variables d'environnement GMAIL trouvées: ${envVars.join(', ')}`,
+    );
+
     this.initializeTransporter();
   }
 
