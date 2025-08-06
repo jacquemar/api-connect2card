@@ -1,6 +1,28 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import * as handlebars from 'handlebars';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ConfigService } from '@nestjs/config';
+
+interface DemandeData {
+  userName: string;
+  nom: string;
+  prenom: string;
+  phoneNumber: string;
+  email: string;
+  date?: string;
+}
+
+interface TemplateData {
+  userName: string;
+  nom: string;
+  prenom: string;
+  phone: string;
+  email: string;
+  date: string;
+  support_email: string;
+}
 
 @Injectable()
 export class EmailService {
@@ -18,7 +40,9 @@ export class EmailService {
   private initializeTransporter() {
     // Vérifier que les identifiants sont présents
     if (!this.gmail_user || !this.gmail_pass) {
-      this.logger.warn('Variables d\'environnement email manquantes. Service email désactivé.');
+      this.logger.warn(
+        "Variables d'environnement email manquantes. Service email désactivé.",
+      );
       return;
     }
 
@@ -32,13 +56,44 @@ export class EmailService {
     });
 
     // Vérifier la connexion
-    this.transporter.verify((error, success) => {
+    this.transporter.verify((error) => {
       if (error) {
         this.logger.error('Erreur de configuration email:', error);
       } else {
         this.logger.log('Serveur email prêt à envoyer des messages');
       }
     });
+  }
+
+  private compileTemplate(templateName: string, data: TemplateData): string {
+    try {
+      // Le service est dans src/services/, le template est dans src/views/
+      const templatePath = path.join(
+        __dirname,
+        '..',
+        'views',
+        `${templateName}.handlebars`,
+      );
+
+      // Vérifier si le fichier existe
+      if (!fs.existsSync(templatePath)) {
+        throw new Error(
+          `Template ${templateName}.handlebars non trouvé dans ${templatePath}`,
+        );
+      }
+
+      const templateContent = fs.readFileSync(templatePath, 'utf8');
+      const template = handlebars.compile(templateContent);
+      return template(data);
+    } catch (error) {
+      this.logger.error(
+        `Erreur lors de la compilation du template ${templateName}:`,
+        error,
+      );
+      throw new Error(
+        `Impossible de compiler le template ${templateName}: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
+      );
+    }
   }
 
   async sendEmail(mailOptions: {
@@ -62,62 +117,43 @@ export class EmailService {
       };
 
       const info = await this.transporter.sendMail(options);
-      this.logger.log(`Email envoyé: ${info.messageId}`);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.logger.log(`Email envoyé: ${info.messageId || 'ID non disponible'}`);
     } catch (error) {
-      this.logger.error('Erreur lors de l\'envoi de l\'email:', error);
-      throw new Error(`Échec de l'envoi de l'email: ${error.message}`);
+      this.logger.error("Erreur lors de l'envoi de l'email:", error);
+      throw new Error(
+        `Échec de l'envoi de l'email: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
+      );
     }
   }
 
-  async sendConfirmationEmail(demandeData: any): Promise<void> {
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="margin: 0; font-size: 28px;">🎉 Félicitations ${demandeData.userName}!</h1>
-        </div>
-        
-        <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
-          <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-            Votre demande de carte a été enregistrée avec succès. Notre équipe va examiner votre demande et vous contactera bientôt.
-          </p>
-          
-          <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #495057; margin-top: 0;">📋 Détails de votre demande:</h3>
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #495057;">Nom:</td>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #333;">${demandeData.nom}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #495057;">Prénom:</td>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #333;">${demandeData.prenom}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #495057;">Nom d'utilisateur:</td>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #333;">${demandeData.userName}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #495057;">Téléphone:</td>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #333;">${demandeData.phoneNumber}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #495057;">Date:</td>
-                <td style="padding: 8px 0; color: #333;">${demandeData.date}</td>
-              </tr>
-            </table>
-          </div>
-          
-          <p style="font-size: 14px; color: #6c757d; text-align: center; margin-top: 30px;">
-            Merci de votre confiance en Connect2Card! 🚀
-          </p>
-        </div>
-      </div>
-    `;
+  async sendConfirmationEmail(demandeData: DemandeData): Promise<void> {
+    try {
+      // Préparer les données pour le template
+      const templateData: TemplateData = {
+        userName: demandeData.userName,
+        nom: demandeData.nom,
+        prenom: demandeData.prenom,
+        phone: demandeData.phoneNumber,
+        email: demandeData.email,
+        date: demandeData.date || new Date().toLocaleDateString('fr-FR'),
+        support_email: this.gmail_user || 'connnect.lab@gmail.com'
+      };
 
-    await this.sendEmail({
-      to: demandeData.email,
-      subject: `Félicitation 🎉 ${demandeData.userName}`,
-      html: htmlContent,
-    });
+      // Compiler le template Handlebars
+      const htmlContent = this.compileTemplate('demande', templateData);
+
+      await this.sendEmail({
+        to: demandeData.email,
+        subject: `Félicitation 🎉 ${demandeData.userName}`,
+        html: htmlContent,
+      });
+    } catch (error) {
+      this.logger.error(
+        "Erreur lors de l'envoi de l'email de confirmation:",
+        error,
+      );
+      throw error;
+    }
   }
 }
