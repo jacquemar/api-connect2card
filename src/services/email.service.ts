@@ -67,21 +67,41 @@ export class EmailService {
 
   private compileTemplate(templateName: string, data: TemplateData): string {
     try {
-      // Le service est dans src/services/, le template est dans src/views/
-      const templatePath = path.join(
-        __dirname,
-        '..',
-        'views',
-        `${templateName}.handlebars`,
-      );
+      // Essayer plusieurs chemins possibles pour le template
+      const possiblePaths = [
+        // En développement
+        path.join(__dirname, '..', 'views', `${templateName}.handlebars`),
+        // En production (après compilation)
+        path.join(__dirname, '..', 'views', `${templateName}.handlebars`),
+        // Alternative pour production
+        path.join(
+          process.cwd(),
+          'dist',
+          'src',
+          'views',
+          `${templateName}.handlebars`,
+        ),
+        // Alternative pour développement
+        path.join(process.cwd(), 'src', 'views', `${templateName}.handlebars`),
+      ];
 
-      // Vérifier si le fichier existe
-      if (!fs.existsSync(templatePath)) {
+      let templatePath: string | null = null;
+
+      for (const possiblePath of possiblePaths) {
+        if (fs.existsSync(possiblePath)) {
+          templatePath = possiblePath;
+          break;
+        }
+      }
+
+      if (!templatePath) {
+        const searchedPaths = possiblePaths.join(', ');
         throw new Error(
-          `Template ${templateName}.handlebars non trouvé dans ${templatePath}`,
+          `Template ${templateName}.handlebars non trouvé. Chemins recherchés: ${searchedPaths}`,
         );
       }
 
+      this.logger.log(`Template trouvé: ${templatePath}`);
       const templateContent = fs.readFileSync(templatePath, 'utf8');
       const template = handlebars.compile(templateContent);
       return template(data);
@@ -137,7 +157,7 @@ export class EmailService {
         phone: demandeData.phoneNumber,
         email: demandeData.email,
         date: demandeData.date || new Date().toLocaleDateString('fr-FR'),
-        support_email: this.gmail_user || 'connnect.lab@gmail.com'
+        support_email: this.gmail_user || 'connnect.lab@gmail.com',
       };
 
       // Compiler le template Handlebars
